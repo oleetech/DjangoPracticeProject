@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+  <div class="col-md-4">
+
+    <div class="card">
+      <div class="card-body">
+
+        <h2 class="font-weight-bold my-4 text-center mb-5 mt-4 font-weight-bold">
+          <strong>Login</strong>
+        </h2>
+        <hr>
+
+
+
+<form method="POST">
+    {% csrf_token %}
+    <div class="md-form">
+      <i class="fas fa-user prefix"></i>
+      <input type="text" id="orangeForm-username" class="form-control" name="username">
+      <label for="orangeForm-username" class="">Username:</label>
+    </div>
+
+
+    <div class="md-form">
+      <i class="fas fa-lock prefix"></i>
+      <input type="password" id="orangeForm-password" class="form-control" name="password">
+      <label for="orangeForm-password" class=""> Password::</label>
+    </div>
+
+
+    <div class="text-center">
+      <button class="btn btn-indigo btn-rounded mt-5 waves-effect waves-light">Sign in</button>
+    </div>
+</form>
+</div>
+</div>
+</div>
+
+  {%endblock  %}
+  
