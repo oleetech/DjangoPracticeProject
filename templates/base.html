@@ -14,48 +14,124 @@
         <link href="{% static 'css/mdb.min.css'  %}" rel="stylesheet">
         <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     </head>
-    <body>
+    <body class="fixed-sn white-skin">
+ 
   <!--Main Navigation-->
   <header>
+
+    <!-- Sidebar navigation -->
+    <div id="slide-out" class="side-nav sn-bg-4 fixed">
+      <ul class="custom-scrollbar">
+        <!-- Logo -->
+        <li class="logo-sn waves-effect py-3">
+          <div class="text-center">
+            <a href="#" class="pl-0"><img src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png"></a>
+          </div>
+        </li>
+        <!-- Logo -->
+
+        <!--Search Form-->
+        <li>
+          <form class="search-form" role="search">
+            <div class="md-form mt-0 waves-light">
+              <input type="text" class="form-control py-2" placeholder="Search">
+            </div>
+          </form>
+        </li>
+        <!--Search Form-->
+        <!-- Side navigation links -->
+        <li>
+          <ul class="collapsible collapsible-accordion">
+            <li><a class="collapsible-header waves-effect arrow-r"><i class="fas fa-tachometer-alt"></i>
+                Dashboards<i class="fas fa-angle-down rotate-icon"></i></a>
+              <div class="collapsible-body">
+                <ul>
+                  <li><a href="../dashboards/v-1.html" class="waves-effect">Version 1</a>
+                  </li>
+     
+                </ul>
+              </div>
+            </li>
+
+        <!-- Side navigation links -->
+      </ul>
+      <div class="sidenav-bg mask-strong"></div>
+    </div>
+    <!-- Sidebar navigation -->
+
     <!-- Navbar -->
     <nav class="navbar fixed-top navbar-expand-lg scrolling-navbar double-nav">
-        <!-- SideNav slide-out button -->
-        <div class="float-left">
-          <a href="#" data-activates="slide-out" class="button-collapse black-text"><i class="fas fa-bars"></i></a>
-        </div>
-
-  
-        <!--Navbar links-->
-        <ul class="nav navbar-nav nav-flex-icons ml-auto">
-  
-  
+      <!-- SideNav slide-out button -->
+      <div class="float-left">
+        <a href="#" data-activates="slide-out" class="button-collapse black-text"><i class="fas fa-bars"></i></a>
+      </div>
 
 
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle waves-effect" href="#" id="userDropdown" data-toggle="dropdown"
-              aria-haspopup="true" aria-expanded="false">
-              <i class="fas fa-user"></i><span class="clearfix d-none d-sm-inline-block">Profile</span></a>
+      <!--Navbar links-->
+      <ul class="nav navbar-nav nav-flex-icons ml-auto">
+
+        <!-- Dropdown -->
+        <li class="nav-item dropdown notifications-nav">
+          <a class="nav-link dropdown-toggle waves-effect" id="navbarDropdownMenuLink" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            <span class="badge red">3</span> <i class="fas fa-bell"></i>
+            <span class="d-none d-md-inline-block">Notifications</span>
+          </a>
+          <div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" href="#">
+              <i class="fas fa-money mr-2" aria-hidden="true"></i>
+              <span>New order received</span>
+              <span class="float-right"><i class="far  fa-clock" aria-hidden="true"></i> 13 min</span>
             </a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                
-            </div>
-          </li>
-  
-        </ul>
-        <!--/Navbar links-->
-      </nav>
-      <!--Navbar -->
-  
-    </header>
-    <!--Main Navigation-->
-          <!-- Start your project here-->
-        <div style="height: 100vh">
-            <div class="flex-center flex-column">
-                {% block content %}
-                {% endblock %}
-            </div>
-        </div>
-            <!-- Start your project here-->
+            <a class="dropdown-item" href="#">
+              <i class="fas fa-money mr-2" aria-hidden="true"></i>
+              <span>New order received</span>
+              <span class="float-right"><i class="far  fa-clock" aria-hidden="true"></i> 33 min</span>
+            </a>
+            <a class="dropdown-item" href="#">
+              <i class="fas fa-line-chart mr-2" aria-hidden="true"></i>
+              <span>Your campaign is about to end</span>
+              <span class="float-right"><i class="far  fa-clock" aria-hidden="true"></i> 53 min</span>
+            </a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link waves-effect"><i class="fas fa-envelope"></i> <span class="clearfix d-none d-sm-inline-block">Contact</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link waves-effect"><i class="far fa-comments"></i> <span class="clearfix d-none d-sm-inline-block">Support</span></a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle waves-effect" href="#" id="userDropdown" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-user"></i> <span class="clearfix d-none d-sm-inline-block">Profile</span></a>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+            <a class="dropdown-item" href="">Register</a>
+            <a class="dropdown-item" href="">Log In</a>
+            <a class="dropdown-item" href="">Logout</a>
+            
+          </div>
+        </li>
+
+      </ul>
+      <!--/Navbar links-->
+    </nav>
+    <!--Navbar -->
+
+  </header>
+  <!--Main Navigation-->
+  <!-- Main layout -->
+   <!-- Main layout -->
+   <main>
+    <div class="container-fluid">
+
+      {% block content %}
+      {% endblock %}
+
+    </div>
+  </main>
+  <!-- Main layout -->
 
 
         <!-- SCRIPTS -->
@@ -66,7 +142,19 @@
         <!-- Bootstrap core JavaScript -->
         <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
         <!-- MDB core JavaScript -->
-        <script type="text/javascript" src="{% static 'js/mdb.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/mdb.min.js' %}" ></script>
         <script src="{% static 'js/custom.js' %}" defer></script>
+        <script>
+          // SideNav Initialization
+          $(".button-collapse").sideNav();
+      
+          var container = document.querySelector('.custom-scrollbar');
+          var ps = new PerfectScrollbar(container, {
+            wheelSpeed: 2,
+            wheelPropagation: true,
+            minScrollbarLength: 20
+          });
+      
+        </script>
     </body>
 </html>

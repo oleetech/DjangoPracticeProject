@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+  <div class="col-md-12">
+
+    <div class="card">
+      <div class="card-body">
+        <h2 class="font-weight-bold my-2 text-center mb-2 mt-2 font-weight-bold">
+            <strong>Item Master Data</strong>
+          </h2>
+          <hr>
+<form method="post">
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-md-4 mb-4">
+        <div class="form-group">
+          <label for="defaultForm-name">Item Name</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="fas fa-envelope"></i>
+              </span>
+            </div>
+            <input type="text" id="defaultForm-name" class="form-control" name="name">
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="form-group">
+          <label for="defaultForm-description">Item Description</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="fas fa-envelope"></i>
+              </span>
+            </div>
+            <input type="text" id="defaultForm-description" class="form-control" name="description">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 mb-4">
+        <div class="form-group">
+          <label for="warehouse">Warehouse</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="fas fa-envelope"></i>
+              </span>
+            </div>
+          <select class="form-control mdb-select" id="warehouse" name="warehouse" style="display: block !important;">
+            {% for warehouse in warehouses %}
+            <option value="{{ warehouse.pk }}">{{ warehouse.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="form-group">
+          <label for="defaultForm-quantity">Item Quantity</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="fas fa-envelope"></i>
+              </span>
+            </div>
+            <input type="text" id="defaultForm-quantity" class="form-control" name="quantity">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="text-center">
+      <button type="submit" class="btn blue-gradient btn-rounded waves-effect waves-light">Save</button>
+    </div>
+    
+</form>
+
+</div>
+</div>
+</div>
+
+  {%endblock  %}
+
+
+
+
+
