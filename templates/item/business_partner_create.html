@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="col-md-12">
+
+    <div class="card">
+      <div class="card-body">
+        <h2 class="font-weight-bold my-2 text-center mb-2 mt-2 font-weight-bold">
+            <strong>Business Partner  Information </strong>
+          </h2>
+          <hr>
+          {% if messages %}
+          <div class="messages">
+          {% for message in messages %}
+              <div class="alert {% if message.tags %}alert-{{ message.tags }}"{% endif %}>
+                  {{ message }}
+              </div>
+          {% endfor %}
+          </div>
+      {% endif %}
+  <!-- Success message -->
+<form method="post">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="form-group">
+              <label for="defaultForm-code">Code:</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fas fa-envelope"></i>
+                  </span>
+                </div>
+                <input type="text" id="defaultForm-code" class="form-control" name="code">
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 mb-4">
+            <div class="form-group">
+              <label for="defaultForm-name">Name:</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fas fa-envelope"></i>
+                  </span>
+                </div>
+                <input type="text" id="defaultForm-name" class="form-control" name="name">
+              </div>
+            </div>
+          </div>
+  
+          <div class="col-md-4 mb-4">
+            <div class="form-group">
+              <label for="defaultForm-address">Address:</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fas fa-envelope"></i>
+                  </span>
+                </div>
+                <input type="text" id="defaultForm-address" class="form-control" name="address">
+              </div>
+            </div>
+          </div>  
+
+
+
+</div>
+    
+
+<div class="row">
+
+
+<div class="col-md-4 mb-4">
+    <div class="form-group">
+      <label for="warehouse">Warehouse</label>
+    <div class="form-group">
+      <select id="currency" class="form-control mdb-select" name="currency">
+        {% for currency in currencies %}
+        <option value="{{ currency.id }}">{{ currency.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+</div>
+</div>
+<div class="col-md-4 mb-4">
+    <div class="form-group">
+      <label for="warehouse">Currency</label>
+      <select id="currency_type" class="form-control mdb-select" name="currency_type">
+        <option value="local">Local Currency</option>
+        <option value="foreign">Foreign Currency</option>
+      </select>
+    </div>
+</div>
+    
+<div class="col-md-4 mb-4">
+    <div class="form-group">
+      <label for="warehouse">Vendor Type</label>
+      <select id="vendor_type" class="form-control mdb-select" name="vendor_type">
+        <option value="supplier">Supplier</option>
+        <option value="customer">Customer</option>
+      </select>
+    </div>
+</div>
+</div>
+<div class="text-center">
+    <button type="submit" class="btn blue-gradient btn-rounded waves-effect waves-light">Save</button>
+  </div>
+  </form>
+</div>
+</div>
+</div>
+
+  {%endblock  %}

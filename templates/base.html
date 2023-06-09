@@ -43,15 +43,41 @@
         <li>
           <ul class="collapsible collapsible-accordion">
             <li><a class="collapsible-header waves-effect arrow-r"><i class="fas fa-tachometer-alt"></i>
-                Dashboards<i class="fas fa-angle-down rotate-icon"></i></a>
+                General Setting  <i class="fas fa-angle-down rotate-icon"></i></a>
               <div class="collapsible-body">
                 <ul>
-                  <li><a href="../dashboards/v-1.html" class="waves-effect">Version 1</a>
-                  </li>
-     
+                  <li><a href="{% url 'unit_create' %}"  class="waves-effect">Unit</a></li>
+                  <li><a href="{% url 'warehouse_create' %}" class="waves-effect">Warehouse</a></li>
                 </ul>
               </div>
             </li>
+            <!-- Inventory -->
+            <li><a class="collapsible-header waves-effect arrow-r"><i class="fas fa-tachometer-alt"></i>
+              Inventory <i class="fas fa-angle-down rotate-icon"></i></a>
+            <div class="collapsible-body">
+              <ul>
+                <li><a href="{% url 'item_create' %}"  class="waves-effect">Item Master Data </a></li>
+              </ul>
+            </div>
+          </li>
+            <!-- Sales -->
+            <li><a class="collapsible-header waves-effect arrow-r"><i class="fas fa-tachometer-alt"></i>
+              Sales <i class="fas fa-angle-down rotate-icon"></i></a>
+            <div class="collapsible-body">
+              <ul>
+                <li><a href="{% url 'unit_create' %}"  class="waves-effect">Sales Order </a></li>
+              </ul>
+            </div>
+          </li>
+            <!-- Business Partner Master Data  -->
+            <li><a class="collapsible-header waves-effect arrow-r"><i class="fas fa-tachometer-alt"></i>
+              Business Partner <i class="fas fa-angle-down rotate-icon"></i></a>
+            <div class="collapsible-body">
+              <ul>
+                <li><a href="{% url 'business_partner_create' %}"  class="waves-effect">Business Partner </a></li>
+              </ul>
+            </div>
+          </li>
 
         <!-- Side navigation links -->
       </ul>
@@ -156,5 +182,7 @@
           });
       
         </script>
+
+
     </body>
 </html>
