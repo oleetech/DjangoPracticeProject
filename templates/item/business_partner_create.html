@@ -9,15 +9,8 @@
             <strong>Business Partner  Information </strong>
           </h2>
           <hr>
-          {% if messages %}
-          <div class="messages">
-          {% for message in messages %}
-              <div class="alert {% if message.tags %}alert-{{ message.tags }}"{% endif %}>
-                  {{ message }}
-              </div>
-          {% endfor %}
-          </div>
-      {% endif %}
+          {% include 'alert.html' %}
+          <!-- Success message -->
   <!-- Success message -->
 <form method="post">
     {% csrf_token %}

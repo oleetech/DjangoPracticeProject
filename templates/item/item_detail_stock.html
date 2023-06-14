@@ -1,0 +1,20 @@
+<h1>{{ item.name }}</h1>
+
+<h2>Item Quantities</h2>
+{{ stock.inhand }}
+<table>
+  <thead>
+    <tr>
+      <th>Warehouse</th>
+      <th>Quantity</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item_quantity in item_quantities %}
+      <tr>
+        <td>{{ item_quantity.warehouse.name }}</td>
+        <td>{{ item_quantity.quantity }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

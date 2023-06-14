@@ -10,96 +10,25 @@
             <strong>Item Master Data</strong>
           </h2>
           <hr>
-          {% if messages %}
-          <div class="messages">
-          {% for message in messages %}
-            <div class="alert {% if message.tags %}alert-{{ message.tags }}"{% endif %}>
-              {{ message }}
-            </div>
-          {% endfor %}
-          </div>
-        {% endif %}
+          {% include 'alert.html' %}
       <!-- Success message -->
 <form method="post">
     {% csrf_token %}
-    <div class="row">
-      <div class="col-md-4 mb-4">
-        <div class="form-group">
-          <label for="defaultForm-name">Item Name</label>
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text">
-                <i class="fas fa-envelope"></i>
-              </span>
-            </div>
-            <input type="text" id="defaultForm-name" class="form-control" name="name">
+    {% for field in form %}
+    <div class="col-md-4 mb-4">
+      <div class="form-group">
+        <label for="{{ field.auto_id }}">{{ field.label }}</label>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+              <i class="fas fa-envelope"></i>
+            </span>
           </div>
-        </div>
-      </div>
-      <div class="col-md-4 mb-4">
-        <div class="form-group">
-          <label for="defaultForm-description">Item Description</label>
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text">
-                <i class="fas fa-envelope"></i>
-              </span>
-            </div>
-            <input type="text" id="defaultForm-description" class="form-control" name="description">
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4 mb-4">
-        <div class="form-group">
-          <label for="defaultForm-quantity">Item Quantity</label>
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text">
-                <i class="fas fa-envelope"></i>
-              </span>
-            </div>
-            <input type="text" id="defaultForm-quantity" class="form-control" name="quantity">
-          </div>
+          {{ field }}
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-4 mb-4">
-        <div class="form-group">
-          <label for="warehouse">Warehouse</label>
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text">
-                <i class="fas fa-envelope"></i>
-              </span>
-            </div>
-          <select class="form-control mdb-select" id="warehouse" name="warehouse" style="display: block !important;">
-            {% for warehouse in warehouses %}
-            <option value="{{ warehouse.pk }}">{{ warehouse.name }}</option>
-            {% endfor %}
-          </select>
-        </div>
-        </div>
-      </div>
-
-      <div class="col-md-4 mb-4">
-        <div class="form-group">
-          <label for="defaultForm-unit">Item Unit</label>
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text">
-                <i class="fas fa-envelope"></i>
-              </span>
-            </div>
-            <select class="form-control mdb-select" id="unit" name="unit" style="display: block !important;">
-              {% for unit in units %}
-              <option value="{{ unit.pk }}">{{ unit.name }}</option>
-              {% endfor %}
-            </select>
-          </div>
-        </div>
-      </div>
-    </div>
+  {% endfor %}
 
 
 

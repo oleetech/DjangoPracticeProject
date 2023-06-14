@@ -3,17 +3,17 @@
 
 
   <div class="col-md-12">
-	<div class="card">
+	
+    <div class="card">
 		<div class="card-body">
 		  <h2 class="font-weight-bold my-2 text-center mb-2 mt-2 font-weight-bold">
-			  <strong>WareHouse</strong>
+			  <strong>Currency</strong>
 			</h2>
 			<hr>
-      {% include 'alert.html' %}
-     
+			{% include 'alert.html' %}
+			<!-- Success message -->
 <!-- Success message -->
 <form method="post">
-  
     {% csrf_token %}
     {% for field in form %}
     <div class="col-md-4 mb-4">
@@ -30,6 +30,7 @@
       </div>
     </div>
   {% endfor %}
+  
 
 	  <div class="text-center">
 		<button type="submit" class="btn blue-gradient btn-rounded waves-effect waves-light">Save</button>
@@ -39,4 +40,5 @@
 </div>
 </div>
 </div>
+
 {%endblock  %}
