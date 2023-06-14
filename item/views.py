@@ -37,7 +37,7 @@ def currency_create(request):
         form = UnitForm()
         
 
-    return render(request, 'item/currency_create.html', {'form': form})
+    return render(request, 'item/currency/currency_create.html', {'form': form})
 
 def unit_create(request):
     # Retrieve the success message from the query parameters
@@ -52,7 +52,7 @@ def unit_create(request):
         form = UnitForm()
         
 
-    return render(request, 'item/unit_create.html', {'form': form})
+    return render(request, 'item/unit/unit_create.html', {'form': form})
 
 
 def warehouse_create(request):
@@ -68,7 +68,7 @@ def warehouse_create(request):
         form = WarehouseForm()
         
 
-    return render(request, 'item/warehouse_create.html', {'form': form})
+    return render(request, 'item/warehouse/warehouse_create.html', {'form': form})
 
 
 def item_create(request):
@@ -178,5 +178,5 @@ def business_partner_create(request):
     else:
         currencies = Currency.objects.all()
         form = BusinessPartnerForm()
-    return render(request, 'item/business_partner_create.html', {'form': form,'currencies': currencies})
+    return render(request, 'item/business_partner/business_partner_create.html', {'form': form,'currencies': currencies})
 

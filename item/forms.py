@@ -66,6 +66,7 @@ class WarehouseForm(forms.ModelForm):
 
 class ItemForm(forms.ModelForm):
 
+    description = forms.CharField(widget=forms.TextInput)
 
     class Meta:
         model = Item
