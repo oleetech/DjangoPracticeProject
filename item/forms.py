@@ -1,11 +1,11 @@
 from django import forms
 from .models import Currency
-from .models import Item
+from .models import Item,ItemReceipt,ItemReceiptinfo
 from .models import BusinessPartner
 from .models import Warehouse
 from .models import Unit
 from django_select2.forms import Select2Widget
-
+from django.forms.models import inlineformset_factory
 class SearchForm(forms.Form):
     name = forms.CharField(required=True)
     description = forms.CharField(required=True, widget=forms.TextInput)
@@ -87,7 +87,49 @@ class ItemForm(forms.ModelForm):
                 'id': f"defaultForm-{field_name}",
             })          
             
+class ItemReceiptinfoForm(forms.ModelForm):
+    warehouse = forms.ModelChoiceField(
+    queryset=Warehouse.objects.all(),
+    widget=Select2Widget(attrs={'class': 'select2'})
+)
+    class Meta:
+        model = ItemReceiptinfo
+        fields = ['warehouse','docno','created']
 
+    def __init__(self, *args, **kwargs):
+        super(ItemReceiptinfoForm, self).__init__(*args, **kwargs)
+        last_docno = ItemReceiptinfo.objects.last().docno if ItemReceiptinfo.objects.exists() else 0
+        self.fields['docno'].initial = last_docno + 1
+        self.fields['docno'].widget.attrs['disabled'] = True
+        self.fields['docno'].required = False
+        for field_name, field in self.fields.items():
+            field.widget.attrs.update({
+                'class': 'form-control',
+                'id': f"defaultForm-{field_name}",
+            })  
+            
+             
+class ItemReceiptForm(forms.ModelForm):
+
+    class Meta:
+        model = ItemReceipt
+        fields = ('item', 'quantity')
+        
+    def __init__(self, *args, **kwargs):
+    
+
+        super(ItemReceiptForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs.update({
+                'class': 'form-control',
+                'id': f"defaultForm-{field_name}",
+            })  
+            
+
+
+
+        
+        
 class BusinessPartnerForm(forms.ModelForm):
     address = forms.CharField(widget=forms.TextInput)
 

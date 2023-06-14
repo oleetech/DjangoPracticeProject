@@ -9,6 +9,11 @@ urlpatterns = [
     path('item/search/', views.search_form, name='search_form'),
     path('searchresult/', views.search_results, name='search_results'),
     
+    path('itemreceipt/create', views.itemreceipt_create, name='itemreceipt_create'),
+    path('itemreceipt/update/<int:pk>/', views.itemreceipt_update, name='itemreceipt_update'),
+    path('itemreceipt/list/', views.itemreceiptinfo_list, name='itemreceiptinfo_list'),
+    path('itemreceipt/delete/<int:pk>/', views.itemreceiptinfo_delete, name='itemreceiptinfo_delete'),
+    
     path('warehouses/create/', views.warehouse_create, name='warehouse_create'),
     path('currency/create/', views.currency_create, name='currency_create'),
     path('unit/create/', views.unit_create, name='unit_create'),

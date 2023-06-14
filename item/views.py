@@ -1,6 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
-from django.core.paginator import Paginator
+
+from django.forms import inlineformset_factory
+from .models import ItemReceipt, ItemReceiptinfo
+from .forms import ItemReceiptinfoForm,ItemReceiptForm
+
 
 from django.contrib import messages
 from django.db.models import Q
@@ -186,3 +190,95 @@ def business_partner_create(request):
         form = BusinessPartnerForm()
     return render(request, 'item/business_partner/business_partner_create.html', {'form': form,'currencies': currencies})
 
+def itemreceipt_create(request):
+    ItemReceiptFormSet = inlineformset_factory(ItemReceiptinfo, ItemReceipt, form=ItemReceiptForm,         fields=('item','quantity',),
+        extra=1,
+        can_delete=False,
+        min_num=1,
+        validate_min=True)
+
+    if request.method == 'POST':
+        form = ItemReceiptinfoForm(request.POST)
+        formset = ItemReceiptFormSet(request.POST)
+
+        if form.is_valid() and formset.is_valid():
+            # Get the last inserted ItemReceiptinfo
+            last_item_receiptinfo = ItemReceiptinfo.objects.last()
+            
+            # Calculate the new docno
+            if last_item_receiptinfo:
+                new_docno = last_item_receiptinfo.docno + 1
+            else:
+                new_docno = 1
+               # Save the form with the new docno
+            itemreceiptinfo = form.save(commit=False)
+            itemreceiptinfo.docno = new_docno
+            itemreceiptinfo.save()
+            
+            for item_receipt_form in formset:
+                item_receipt = item_receipt_form.save(commit=False)
+                item_receipt.item_info = itemreceiptinfo
+                item_receipt.warehouse = itemreceiptinfo.warehouse
+                item_receipt.save()
+                
+            
+
+            return redirect('home')
+    else:
+        form = ItemReceiptinfoForm()
+        formset = ItemReceiptFormSet()
+ 
+
+    context = {
+        'form': form,
+        'formset': formset
+  
+    }
+    return render(request, 'item/itemreceipt/form.html', context)
+
+from django.shortcuts import get_object_or_404
+
+def itemreceipt_update(request, pk):
+    itemreceiptinfo = get_object_or_404(ItemReceiptinfo, pk=pk)
+    ItemReceiptFormSet = inlineformset_factory(ItemReceiptinfo, ItemReceipt, form=ItemReceiptForm, fields=('item', 'quantity',),
+                                               extra=1, can_delete=False, min_num=1, validate_min=True)
+
+    if request.method == 'POST':
+        form = ItemReceiptinfoForm(request.POST, instance=itemreceiptinfo)
+        formset = ItemReceiptFormSet(request.POST, instance=itemreceiptinfo)
+
+        if form.is_valid() and formset.is_valid():
+            form.save()
+            instances = formset.save(commit=False)  # Save the formset instances without committing to the database
+
+            for instance in instances:
+                instance.warehouse = itemreceiptinfo.warehouse  # Assign the warehouse value
+                instance.save()
+
+            formset.save_m2m()  # Save the many-to-many relationships, if any
+
+            return redirect('home')
+    else:
+        form = ItemReceiptinfoForm(instance=itemreceiptinfo)
+        formset = ItemReceiptFormSet(instance=itemreceiptinfo)
+
+    context = {
+        'form': form,
+        'formset': formset,
+        'itemreceiptinfo': itemreceiptinfo,
+    }
+    return render(request, 'item/itemreceipt/updateform.html', context)
+
+
+def itemreceiptinfo_list(request):
+    itemreceiptinfos = ItemReceiptinfo.objects.all()
+    return render(request, 'item/itemreceipt/list.html', {'itemreceiptinfos': itemreceiptinfos})
+
+def itemreceiptinfo_delete(request, pk):
+    itemreceiptinfo = get_object_or_404(ItemReceiptinfo, pk=pk)
+    
+    if request.method == 'POST':
+        itemreceiptinfo.delete()
+        return redirect('itemreceiptinfo_list')
+    
+    return render(request, 'item/itemreceipt/delete.html', {'itemreceiptinfo': itemreceiptinfo})

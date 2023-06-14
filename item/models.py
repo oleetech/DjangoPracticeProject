@@ -40,18 +40,22 @@ class ItemReceiptinfo(models.Model):
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
     docno = models.PositiveIntegerField(default=1)
     created = models.DateTimeField(default=timezone.now)
-
+    def __str__(self):
+        return f" {self.docno}"
         
 class ItemReceipt(models.Model):
+    item_info = models.ForeignKey(ItemReceiptinfo, on_delete=models.CASCADE, null=True, default=None)
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=0)
-
+    def __str__(self):
+        return f" {self.item_info.docno}"
 class ItemDelivery(models.Model):
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=0)
-
+    def __str__(self):
+        return f"ItemDelivery: {self.item.name} - {self.quantity}"
 class Stock(models.Model):
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)

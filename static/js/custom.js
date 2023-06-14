@@ -4,6 +4,12 @@ $(".alert").delay(4000).slideUp(200, function() {
 });
 
 // Select2
-$(document).ready(function() {
+
     $('.django-select2').select2();
-});
+
+
+
+// add for formset add remove button 
+
+
+

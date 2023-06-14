@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Item Receipt Information List</h2>
+
+{% for itemreceiptinfo in itemreceiptinfos %}
+    <div>
+        <p>Item Receipt Info ID: {{ itemreceiptinfo.pk }}</p>
+        <!-- Display other item receipt info fields as needed -->
+        <p>
+            <a href="{% url 'itemreceipt_update' itemreceiptinfo.pk %}">Edit</a>
+            <a href="{% url 'itemreceiptinfo_delete' itemreceiptinfo.pk %}">Delete</a>
+        </p>
+    </div>
+    <hr>
+{% empty %}
+    <p>No item receipt information available.</p>
+{% endfor %}
+
+{% endblock %}
