@@ -7,21 +7,19 @@ from .models import Unit
 
 
 class ReusableForm(forms.Form):
-    name = forms.CharField(required=True)
-
     class Meta:
         model = Item
-        fields = ['name', 'description', 'quantity', 'warehouse', 'unit']
-
+        fields = ['name', 'description','quantity','warehouse','unit']
     def __init__(self, *args, **kwargs):
+
+
         super(ReusableForm, self).__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
-            if field_name != 'name':
-                field.widget.attrs['disabled'] = True
             field.widget.attrs.update({
                 'class': 'form-control',
                 'id': f"defaultForm-{field_name}",
             })
+
 
 class CurrencyForm(forms.ModelForm):
     class Meta:

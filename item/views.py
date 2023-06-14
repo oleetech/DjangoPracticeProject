@@ -1,4 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
+
 from django.contrib import messages
 from django.db.models import Q
 
@@ -103,7 +105,13 @@ def item_update(request, item_id):
 
 
 def search_form(request):
-    return render(request, 'item/search_form.html')
+
+    form = ReusableForm(request.POST)
+    context = {
+        'form': form,
+    }
+    return render(request, 'item/search_form.html',context)
+    
 def search_results(request):
     name = request.GET.get('name')
     description = request.GET.get('description')
