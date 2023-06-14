@@ -1,7 +1,27 @@
+
+
+{% extends 'base.html' %}
+{% block content %}
+
+
+  <div class="col-md-12">
+
+    <div class="card">
+      <div class="card-body">
+
 <h2>{{ item.name }}</h2>
 <form method="POST" action="{% url 'item_update' item.pk %}">
 
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Search">
+    <div class="text-center">
+      <button type="submit" class="btn blue-gradient btn-rounded waves-effect waves-light">Save</button>
+    </div>
   </form>
+
+
+</div>
+</div>
+</div>
+
+  {%endblock  %}

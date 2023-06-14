@@ -11,6 +11,8 @@ class Currency(models.Model):
 class Unit(models.Model):
     name=models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.name
 
 class Warehouse(models.Model):
     name = models.CharField(max_length=100)
@@ -24,7 +26,7 @@ class Item(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     quantity = models.PositiveIntegerField()
-    warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
+    warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE,default=1)
     unit = models.ForeignKey(Unit, on_delete=models.SET_DEFAULT, default=1)
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     

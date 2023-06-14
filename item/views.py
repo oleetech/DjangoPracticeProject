@@ -11,7 +11,7 @@ from .forms import CurrencyForm
 from .models import Currency
 
 
-from .forms import ItemForm,ReusableForm
+from .forms import ItemForm,SearchForm
 from .models import Item
 
 from .models import Warehouse
@@ -106,7 +106,7 @@ def item_update(request, item_id):
 
 def search_form(request):
 
-    form = ReusableForm(request.POST)
+    form = SearchForm(request.POST)
     context = {
         'form': form,
     }
@@ -129,7 +129,8 @@ def search_results(request):
 
 def item_detail(request, pk):
     item = get_object_or_404(Item, pk=pk)
-    return render(request, 'item/item_detail.html', {'item': item})
+    form = ItemForm(instance=item)
+    return render(request, 'item/item_detail.html', {'form': form,'item': item})
 
 
 def item_list_view(request):

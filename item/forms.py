@@ -6,19 +6,21 @@ from .models import Warehouse
 from .models import Unit
 
 
-class ReusableForm(forms.Form):
-    class Meta:
-        model = Item
-        fields = ['name', 'description','quantity','warehouse','unit']
+class SearchForm(forms.Form):
+    name = forms.CharField(required=True)
+    description = forms.CharField(required=True, widget=forms.TextInput)
+
     def __init__(self, *args, **kwargs):
+        super(SearchForm, self).__init__(*args, **kwargs)
+        self.fields['name'].required = False
+        self.fields['description'].required = False
 
-
-        super(ReusableForm, self).__init__(*args, **kwargs)
+     
         for field_name, field in self.fields.items():
             field.widget.attrs.update({
                 'class': 'form-control',
                 'id': f"defaultForm-{field_name}",
-            })
+            })  
 
 
 class CurrencyForm(forms.ModelForm):
@@ -80,6 +82,7 @@ class ItemForm(forms.ModelForm):
                 'class': 'form-control',
                 'id': f"defaultForm-{field_name}",
             })          
+            
 
 class BusinessPartnerForm(forms.ModelForm):
 

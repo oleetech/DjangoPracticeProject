@@ -11,12 +11,17 @@
 
 <!-- search_form.html -->
 <form method="GET" action="{% url 'search_results' %}">
-    <input type="text" name="name" placeholder="name">
-    <input type="text" name="description" placeholder="description">
-    <!-- Add more input fields for other columns as necessary -->
+      <div class="form-group">
+        <label for="id_name">Name:</label>
+        {{ form.name }}
+      </div>
+      <div class="form-group">
+        <label for="id_description">Description:</label>
+        {{ form.description }}
+      </div>
   
     <div class="text-center">
-      <button type="submit" class="btn blue-gradient btn-rounded waves-effect waves-light">Save</button>
+      <button type="submit" class="btn blue-gradient btn-rounded waves-effect waves-light">Find</button>
     </div>
   </form>
 
