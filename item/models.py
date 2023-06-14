@@ -1,5 +1,6 @@
 from os import name
 from django.db import models
+from django.utils import timezone
 
 class Currency(models.Model):
     name = models.CharField(max_length=100)
@@ -34,7 +35,13 @@ class Item(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+class ItemReceiptinfo(models.Model):
+    warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
+    docno = models.PositiveIntegerField(default=1)
+    created = models.DateTimeField(default=timezone.now)
+
+        
 class ItemReceipt(models.Model):
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)

@@ -4,7 +4,7 @@ from .models import Item
 from .models import BusinessPartner
 from .models import Warehouse
 from .models import Unit
-
+from django_select2.forms import Select2Widget
 
 class SearchForm(forms.Form):
     name = forms.CharField(required=True)
@@ -69,6 +69,10 @@ class WarehouseForm(forms.ModelForm):
 class ItemForm(forms.ModelForm):
 
     description = forms.CharField(widget=forms.TextInput)
+    warehouse = forms.ModelChoiceField(
+        queryset=Warehouse.objects.all(),
+        widget=Select2Widget(attrs={'class': 'select2'})
+    )
 
     class Meta:
         model = Item
