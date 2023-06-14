@@ -1,0 +1,21 @@
+<div class="row">
+    {% for field in form %}
+      {% if forloop.counter0|divisibleby:3 and not forloop.first %}
+        </div>
+        <div class="row">
+      {% endif %}
+      <div class="col-md-4 mb-4">
+        <div class="form-group">
+          <label for="{{ field.auto_id }}">{{ field.label }}</label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="fas fa-envelope"></i>
+              </span>
+            </div>
+            {{ field }}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>

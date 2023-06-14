@@ -1,6 +1,7 @@
 
 
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
 
 
@@ -8,8 +9,16 @@
 
     <div class="card">
       <div class="card-body">
+        <h2 class="font-weight-bold my-2 text-center mb-2 mt-2 font-weight-bold">
+          <strong>Item Details </strong>
+        </h2>
+        <a href="{% url 'item_stock_view' item_id=item.id %}"><img src="{% static 'images/stock-25.png' %}" alt="Item Stock "> </a>
+        <hr>
+     
 
 <h2>{{ item.name }}</h2>
+
+
 <form method="POST" action="{% url 'item_update' item.pk %}">
 
     {% csrf_token %}

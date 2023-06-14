@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
+from django.core.paginator import Paginator
 
 from django.contrib import messages
 from django.db.models import Q
@@ -147,6 +148,9 @@ def item_stock_view(request, item_id):
     item = Item.objects.get(id=item_id)
     warehouses = Warehouse.objects.all()
 
+    
+
+
     item_quantities = []
     for warehouse in warehouses:
         stock_quantity = Stock.objects.filter(warehouse=warehouse, item=item).aggregate(Sum('quantity'))['quantity__sum'] or 0
@@ -163,6 +167,7 @@ def item_stock_view(request, item_id):
     context = {
         'item': item,
         'item_quantities': item_quantities,
+
         
     }
 

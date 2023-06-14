@@ -1,8 +1,18 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+  <div class="col-md-12">
+
+    <div class="card">
+      <div class="card-body">
 <h1>{{ item.name }}</h1>
 
 <h2>Item Quantities</h2>
 {{ stock.inhand }}
-<table>
+<table class="table table-bordered border-primary">
   <thead>
     <tr>
       <th>Warehouse</th>
@@ -18,3 +28,11 @@
     {% endfor %}
   </tbody>
 </table>
+
+
+    
+</div>
+</div>
+</div>
+
+  {%endblock  %}

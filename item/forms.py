@@ -85,7 +85,7 @@ class ItemForm(forms.ModelForm):
             
 
 class BusinessPartnerForm(forms.ModelForm):
-
+    address = forms.CharField(widget=forms.TextInput)
 
     class Meta:
         model = BusinessPartner
