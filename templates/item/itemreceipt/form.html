@@ -20,14 +20,14 @@
                 {{ formset.management_form }}
                 <div class="formset-container">
                     <table class="table table-bordered border-primary table-sm" >
-                        <thead>
+                        <thead class="">
                             <tr>
                                 {% for field in formset.empty_form.visible_fields %}
                                     <th>{{ field.label }}</th>
                                 {% endfor %}
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody >
                             {% for form in formset %}
                                 <tr class="form-container">
                                     {% for field in form.visible_fields %}
