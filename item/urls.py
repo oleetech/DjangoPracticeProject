@@ -8,7 +8,8 @@ urlpatterns = [
     path('item/stock/<int:item_id>/', views.item_stock_view, name='item_stock_view'),
     path('item/search/', views.search_form, name='search_form'),
     path('searchresult/', views.search_results, name='search_results'),
-    
+
+
     path('itemreceipt/create', views.itemreceipt_create, name='itemreceipt_create'),
     path('itemreceipt/update/<int:pk>/', views.itemreceipt_update, name='itemreceipt_update'),
     path('itemreceipt/list/', views.itemreceiptinfo_list, name='itemreceiptinfo_list'),

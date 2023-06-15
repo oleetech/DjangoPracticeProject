@@ -78,7 +78,7 @@ class ItemForm(forms.ModelForm):
 
     class Meta:
         model = Item
-        fields = ['name', 'description','quantity','warehouse','unit']
+        fields = ['name', 'description','warehouse','unit']
     def __init__(self, *args, **kwargs):
 
 
@@ -90,10 +90,7 @@ class ItemForm(forms.ModelForm):
             })          
             
 class ItemReceiptinfoForm(forms.ModelForm):
-    warehouse = forms.ModelChoiceField(
-    queryset=Warehouse.objects.all(),
-    widget=Select2Widget(attrs={'class': 'select2'})
-)
+
     class Meta:
         model = ItemReceiptinfo
         fields = ['warehouse','docno','created']
@@ -127,13 +124,7 @@ class ItemReceiptForm(forms.ModelForm):
                 'id': f"defaultForm-{field_name}",
             })  
 
-    def clean_quantity(self):
-        quantity = self.cleaned_data.get('quantity')
 
-        if quantity == 0:
-            raise ValidationError("Quantity cannot be 0.")
-
-        return quantity            
 
 
 

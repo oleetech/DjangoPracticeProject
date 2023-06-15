@@ -22,6 +22,7 @@
           {% include 'alert.html' %}
       <!-- Success message -->
 <form method="post">
+  {% csrf_token %}
   {% include 'component/formfield3col.html' %}
   
 

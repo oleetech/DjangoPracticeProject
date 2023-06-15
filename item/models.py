@@ -1,22 +1,23 @@
 from os import name
 from django.db import models
 from django.utils import timezone
+from django.core.exceptions import ValidationError
 
 class Currency(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100,unique=True)
     code = models.CharField(max_length=3)
 
     def __str__(self):
         return self.name
     
 class Unit(models.Model):
-    name=models.CharField(max_length=100)
+    name=models.CharField(max_length=100,unique=True)
 
     def __str__(self):
         return self.name
 
 class Warehouse(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100,unique=True)
     location = models.CharField(max_length=100)
     # Add any other fields for the Warehouse model
 
@@ -24,7 +25,7 @@ class Warehouse(models.Model):
         return self.name
 
 class Item(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100,unique=True)
     description = models.TextField()
     quantity = models.PositiveIntegerField()
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE,default=1)
@@ -38,7 +39,7 @@ class Item(models.Model):
 
 class ItemReceiptinfo(models.Model):
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
-    docno = models.PositiveIntegerField(default=1)
+    docno = models.PositiveIntegerField(default=1,unique=True)
     created = models.DateTimeField(default=timezone.now)
     def __str__(self):
         return f" {self.docno}"
@@ -51,7 +52,9 @@ class ItemReceipt(models.Model):
     def __str__(self):
         return f" {self.item_info.docno}"
 
-
+    def clean(self):
+        if self.quantity == 0:
+            raise ValidationError("Quantity cannot be 0.")
   
 class ItemDelivery(models.Model):
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
@@ -65,8 +68,8 @@ class Stock(models.Model):
     quantity = models.PositiveIntegerField(default=0)
 
 class BusinessPartner(models.Model):
-    code = models.CharField(max_length=50)
-    name = models.CharField(max_length=100)
+    code = models.CharField(max_length=50,unique=True)
+    name = models.CharField(max_length=100,unique=True)
     address = models.TextField()
     currency = models.ForeignKey(Currency, on_delete=models.PROTECT,default=1)
 

@@ -1,7 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 
-from django.forms import inlineformset_factory
+
+
+from django.forms import formset_factory, inlineformset_factory
 from .models import ItemReceipt, ItemReceiptinfo
 from .forms import ItemReceiptinfoForm,ItemReceiptForm
 
@@ -28,6 +30,9 @@ from .forms import BusinessPartnerForm
 
 from django.db.models import Sum
 from .models import  Stock, ItemReceipt, ItemDelivery
+
+
+
 
 def currency_create(request):
     # Retrieve the success message from the query parameters
@@ -85,6 +90,10 @@ def item_create(request):
             form.save()
             messages.success(request, 'The post has been created successfully.')
             return redirect('item_create')
+        else:
+            error_messages = form.errors.values()
+            for message in error_messages:
+                messages.error(request, message)        
     else:
         warehouses = Warehouse.objects.all()
         units = Unit.objects.all()
@@ -107,7 +116,6 @@ def item_update(request, item_id):
         form = ItemForm(instance=item)
     
     return render(request, 'item/item_create.html', {'form': form, 'item': item, 'warehouses': warehouses, 'units': units})
-
 
 def search_form(request):
 
@@ -191,11 +199,16 @@ def business_partner_create(request):
     return render(request, 'item/business_partner/business_partner_create.html', {'form': form,'currencies': currencies})
 
 def itemreceipt_create(request):
-    ItemReceiptFormSet = inlineformset_factory(ItemReceiptinfo, ItemReceipt, form=ItemReceiptForm,         fields=('item','quantity',),
+    ItemReceiptFormSet = inlineformset_factory(
+        ItemReceiptinfo,
+        ItemReceipt,
+        form=ItemReceiptForm,
+        fields=('item', 'quantity'),
         extra=1,
         can_delete=False,
         min_num=1,
-        validate_min=True)
+        validate_min=True
+    )
 
     if request.method == 'POST':
         form = ItemReceiptinfoForm(request.POST)
@@ -204,40 +217,42 @@ def itemreceipt_create(request):
         if form.is_valid() and formset.is_valid():
             # Get the last inserted ItemReceiptinfo
             last_item_receiptinfo = ItemReceiptinfo.objects.last()
-            
+
             # Calculate the new docno
             if last_item_receiptinfo:
                 new_docno = last_item_receiptinfo.docno + 1
             else:
                 new_docno = 1
-               # Save the form with the new docno
+           
+            # Save the form with the new docno
             itemreceiptinfo = form.save(commit=False)
             itemreceiptinfo.docno = new_docno
             itemreceiptinfo.save()
-            
+
             for item_receipt_form in formset:
                 item_receipt = item_receipt_form.save(commit=False)
                 item_receipt.item_info = itemreceiptinfo
                 item_receipt.warehouse = itemreceiptinfo.warehouse
                 item_receipt.save()
 
-
-                
-            
             messages.success(request, 'The post has been created successfully.')
             return redirect('itemreceipt_create')
         else:
-            
-            messages.error(request, 'Form submission failed. Please fix the errors.')
+            # Add form errors to messages framework
+            for field, error_list in form.errors.items():
+                for error in error_list:
+                    messages.error(request, f'{field}: {error}')
+                    
+            for formset_error in formset.non_form_errors():
+                messages.error(request, formset_error)
+                
     else:
         form = ItemReceiptinfoForm()
         formset = ItemReceiptFormSet()
- 
 
     context = {
         'form': form,
         'formset': formset
-  
     }
     return render(request, 'item/itemreceipt/form.html', context)
 
