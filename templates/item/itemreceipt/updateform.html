@@ -1,30 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Update </title>
-
-</head>
-<body>
-    <h1>Update </h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        {{ formset.management_form }}
-        <div class="formset-container">
-            {% for form in formset %}
-                <div class="form-container">
-                    {{ form.as_table }}
-                    {% if forloop.last %}
-                        <button type="button" class="add-form" data-form-prefix="{{ formset.prefix }}">Add Book</button>
-                    {% else %}
-                        <button type="button" class="delete-form">Remove Book</button>
-                    {% endif %}
-                </div>
-            {% endfor %}
-        </div>
-        <button type="submit">Save</button>
-    </form>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Update Author</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
             $('.add-form').click(function() {
@@ -80,5 +58,26 @@
             }
         });
     </script>
+</head>
+<body>
+    <h1>Update Author</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {{ formset.management_form }}
+        <div class="formset-container">
+            {% for form in formset %}
+                <div class="form-container">
+                    {{ form.as_table }}
+                    {% if forloop.last %}
+                        <button type="button" class="add-form" data-form-prefix="{{ formset.prefix }}">Add Book</button>
+                    {% else %}
+                        <button type="button" class="delete-form">Remove Book</button>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+        <button type="submit">Save</button>
+    </form>
 </body>
 </html>

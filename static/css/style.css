@@ -2,10 +2,28 @@ select {
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   display: block !important;
 }
+.input-xs {
+  height: 22px;
+  padding: 2px 5px;
+  font-size: 12px;
+  line-height: 1.5; /* If Placeholder of the input is moved up, rem/modify this. */
+  border-radius: 3px;
+}
+
+.table td, .table th {
+ padding: 0rem !important; 
+  vertical-align: top;
+  border-top: 1px solid #dee2e6;
+}
+.btn.btn-sm {
+  padding: 0rem 0.5rem;
+ 
+}
 
 @media print {
   .page-break {
       page-break-before: always;
   }
 }
+
 

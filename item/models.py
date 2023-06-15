@@ -50,6 +50,9 @@ class ItemReceipt(models.Model):
     quantity = models.PositiveIntegerField(default=0)
     def __str__(self):
         return f" {self.item_info.docno}"
+
+
+  
 class ItemDelivery(models.Model):
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)

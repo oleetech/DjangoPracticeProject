@@ -219,11 +219,15 @@ def itemreceipt_create(request):
                 item_receipt = item_receipt_form.save(commit=False)
                 item_receipt.item_info = itemreceiptinfo
                 item_receipt.warehouse = itemreceiptinfo.warehouse
-                item_receipt.save()
+
+
                 
             
-
-            return redirect('home')
+            messages.success(request, 'The post has been created successfully.')
+            return redirect('itemreceipt_create')
+        else:
+            
+            messages.error(request, 'Form submission failed. Please fix the errors.')
     else:
         form = ItemReceiptinfoForm()
         formset = ItemReceiptFormSet()
@@ -236,9 +240,10 @@ def itemreceipt_create(request):
     }
     return render(request, 'item/itemreceipt/form.html', context)
 
-from django.shortcuts import get_object_or_404
 
 def itemreceipt_update(request, pk):
+    # Retrieve the success message from the query parameters
+    success_message = request.GET.get('success_message')
     itemreceiptinfo = get_object_or_404(ItemReceiptinfo, pk=pk)
     ItemReceiptFormSet = inlineformset_factory(ItemReceiptinfo, ItemReceipt, form=ItemReceiptForm, fields=('item', 'quantity',),
                                                extra=1, can_delete=False, min_num=1, validate_min=True)
@@ -255,9 +260,10 @@ def itemreceipt_update(request, pk):
                 instance.warehouse = itemreceiptinfo.warehouse  # Assign the warehouse value
                 instance.save()
 
-            formset.save_m2m()  # Save the many-to-many relationships, if any
-
-            return redirect('home')
+            formset.save()  # Save the many-to-many relationships, if any
+            messages.success(request, 'The item has been updated successfully.')
+            # Redirect to itemreceipt_update route
+            return redirect('itemreceipt_create')
     else:
         form = ItemReceiptinfoForm(instance=itemreceiptinfo)
         formset = ItemReceiptFormSet(instance=itemreceiptinfo)

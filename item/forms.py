@@ -1,4 +1,6 @@
 from django import forms
+from django.core.exceptions import ValidationError
+
 from .models import Currency
 from .models import Item,ItemReceipt,ItemReceiptinfo
 from .models import BusinessPartner
@@ -121,10 +123,17 @@ class ItemReceiptForm(forms.ModelForm):
         super(ItemReceiptForm, self).__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             field.widget.attrs.update({
-                'class': 'form-control',
+                'class': 'form-control input-xs',
                 'id': f"defaultForm-{field_name}",
             })  
-            
+
+    def clean_quantity(self):
+        quantity = self.cleaned_data.get('quantity')
+
+        if quantity == 0:
+            raise ValidationError("Quantity cannot be 0.")
+
+        return quantity            
 
 
 
