@@ -219,6 +219,7 @@ def itemreceipt_create(request):
                 item_receipt = item_receipt_form.save(commit=False)
                 item_receipt.item_info = itemreceiptinfo
                 item_receipt.warehouse = itemreceiptinfo.warehouse
+                item_receipt.save()
 
 
                 
