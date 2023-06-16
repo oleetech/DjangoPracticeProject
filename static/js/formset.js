@@ -1,10 +1,14 @@
-$(document).ready(function () {
-    $('.add-form').click(function () {
+$(document).ready(function() {
+    updateExtraValue();
+
+    $('.add-form').click(function() {
         cloneForm($(this).data('form-prefix'));
+        updateExtraValue();
     });
 
-    $('.remove-form').click(function () {
+    $('.remove-form').click(function() {
         removeForm($(this).data('form-prefix'));
+        updateExtraValue();
     });
 
     function cloneForm(formPrefix) {
@@ -19,7 +23,7 @@ $(document).ready(function () {
 
         formContainer.after(newForm);
 
-        newForm.find('input, select').each(function () {
+        newForm.find('input, select').each(function() {
             updateFormElementIndex($(this), formPrefix, totalForms);
         });
 
@@ -44,11 +48,28 @@ $(document).ready(function () {
 
     function updateFormIndex(formPrefix) {
         const formContainer = $('.form-container');
-        formContainer.each(function (index) {
-            $(this).find('input, select').each(function () {
+        formContainer.each(function(index) {
+            $(this).find('input, select').each(function() {
                 updateFormElementIndex($(this), formPrefix, index);
             });
         });
         $('#id_' + formPrefix + '-TOTAL_FORMS').val(formContainer.length);
     }
+    
+    function updateExtraValue() {
+        const formContainer = $('.form-container');
+        const extraValue = Math.max(formContainer.length - 1, 1); // Calculate the new extra value
+        const formPrefix = formContainer.first().find('input, select').first().attr('name').split('-')[0];
+        $('#id_' + formPrefix + '-TOTAL_FORMS').val(extraValue);
+    }
 });
+
+
+$(document).ready(function() {
+    // Update the extra value based on the initial form count
+    var extraValue = Math.max($('#formset-container .form-container').length - 1, 0);
+    $('#id_extra_value').val(extraValue);
+    
+    // Rest of your JavaScript code
+    // ...
+  });

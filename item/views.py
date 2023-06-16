@@ -2,10 +2,10 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 
 
-
+from django.core.exceptions import ValidationError
 from django.forms import formset_factory, inlineformset_factory
-from .models import ItemReceipt, ItemReceiptinfo,ItemDeliveryinfo,ItemDelivery
-from .forms import ItemReceiptinfoForm,ItemReceiptForm,ItemDeliveryinfoForm,ItemDeliveryForm
+from .models import ItemReceipt, ItemReceiptinfo,ItemDeliveryinfo,ItemDelivery,SalesOrderInfo,SalesOrderDelivery,Stock
+from .forms import ItemReceiptinfoForm,ItemReceiptForm,ItemDeliveryinfoForm,ItemDeliveryForm,SalesOrderInfoForm,SalesOrderDeliveryForm,StockForm
 
 
 from django.contrib import messages
@@ -79,6 +79,22 @@ def warehouse_create(request):
         
 
     return render(request, 'item/warehouse/warehouse_create.html', {'form': form})
+
+def stock_create(request):
+    success_message = request.GET.get('success_message')
+
+    if request.method == 'POST':
+        form = StockForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'The stock has been created successfully.')
+            return redirect('stock_create')
+    else:
+        form = StockForm()
+        context = {'form': form,'page_title': 'Create Stock'}
+
+    return render(request, 'item/create.html',context )
+
 
 
 def item_create(request):
@@ -223,14 +239,14 @@ def itemreceipt_create(request):
                 new_docno = last_item_receiptinfo.docno + 1
             else:
                 new_docno = 1
-           
+
             # Save the form with the new docno
             itemreceiptinfo = form.save(commit=False)
             itemreceiptinfo.docno = new_docno
             itemreceiptinfo.save()
 
-            for item_receipt_form in formset:
-                item_receipt = item_receipt_form.save(commit=False)
+            for formset_form in formset.forms:
+                item_receipt = formset_form.save(commit=False)
                 item_receipt.item_info = itemreceiptinfo
                 item_receipt.warehouse = itemreceiptinfo.warehouse
                 item_receipt.save()
@@ -242,10 +258,10 @@ def itemreceipt_create(request):
             for field, error_list in form.errors.items():
                 for error in error_list:
                     messages.error(request, f'{field}: {error}')
-                    
+
             for formset_error in formset.non_form_errors():
                 messages.error(request, formset_error)
-                
+
     else:
         form = ItemReceiptinfoForm()
         formset = ItemReceiptFormSet()
@@ -253,9 +269,11 @@ def itemreceipt_create(request):
     context = {
         'form': form,
         'formset': formset,
-        'page_title': 'Create Item Receipt '  # Set the page title here
+        'page_title': 'Create Item Receipt'  # Set the page title here
     }
     return render(request, 'item/itemreceipt/form.html', context)
+
+
 
 
 def itemreceipt_update(request, pk):
@@ -445,3 +463,153 @@ def itemdeliveryinfo_delete(request, pk):
         return redirect('itemdeliveryinfo_list')
     
     return render(request, 'item/itemreceipt/delete-goods-delivery.html', {'itemdeliveryinfo': itemdeliveryinfo})
+
+
+def salesorder_create(request):
+    SalesOrderDeliveryFormSet = inlineformset_factory(
+        SalesOrderInfo,
+        SalesOrderDelivery,
+        form=SalesOrderDeliveryForm,
+        fields=('item', 'quantity', 'price'),
+        extra=0,  # Initial extra value set to 0
+        can_delete=False,
+        min_num=1,
+        validate_min=True
+    )
+
+    if request.method == 'POST':
+        form = SalesOrderInfoForm(request.POST)
+        formset = SalesOrderDeliveryFormSet(request.POST)
+
+        extra_value = int(request.POST.get('extra_value', 0))  # Retrieve the extra_value from the form submission
+
+        # Update the extra value of the formset based on extra_value
+        SalesOrderDeliveryFormSet.extra = extra_value
+
+        if form.is_valid() and formset.is_valid():
+            # Calculate auto document no
+            last_item_salesinfo = SalesOrderInfo.objects.last()
+
+            if last_item_salesinfo:
+                new_docno = last_item_salesinfo.order_number + 1
+            else:
+                new_docno = 1
+            sales_order_info = form.save(commit=False)
+            sales_order_info.order_number = new_docno
+
+            # Calculate and set the total_amount
+            total_amount = sum(
+                form.cleaned_data['quantity'] * form.cleaned_data['price']
+                for form in formset.forms
+            )
+            sales_order_info.total_amount = total_amount
+
+            # Save the sales_order_info instance to assign a primary key
+            sales_order_info.save()
+
+            for form in formset.forms:
+                if form.has_changed() and form.cleaned_data.get('quantity', 0) > 0:
+                    sales_order_delivery = form.save(commit=False)
+                    sales_order_delivery.order_info = sales_order_info
+                    sales_order_delivery.price_total = (
+                        sales_order_delivery.quantity * sales_order_delivery.price
+                    )
+                    sales_order_delivery.save()
+
+            messages.success(request, 'The sales order has been created successfully.')
+            return redirect('salesorder_create')
+        else:
+            for field, error_list in form.errors.items():
+                for error in error_list:
+                    messages.error(request, f'{field}: {error}')
+
+            for formset_error in formset.non_form_errors():
+                messages.error(request, formset_error)
+
+    else:
+        form = SalesOrderInfoForm()
+        formset = SalesOrderDeliveryFormSet()
+
+    context = {
+        'form': form,
+        'formset': formset,
+        'page_title': 'Create Sales Order'
+    }
+    return render(request, 'item/itemreceipt/form.html', context)
+
+
+
+
+def salesorder_update(request, pk):
+    sales_order_info = get_object_or_404(SalesOrderInfo, pk=pk)
+    SalesOrderDeliveryFormSet = inlineformset_factory(
+        SalesOrderInfo,
+        SalesOrderDelivery,
+        form=SalesOrderDeliveryForm,
+        fields=('item', 'quantity', 'price'),
+        extra=0,
+        can_delete=False,
+        min_num=1,
+        validate_min=True
+    )
+
+    if request.method == 'POST':
+        form = SalesOrderInfoForm(request.POST, instance=sales_order_info)
+        formset = SalesOrderDeliveryFormSet(request.POST, instance=sales_order_info)
+
+        if form.is_valid() and formset.is_valid():
+            sales_order_info = form.save(commit=False)
+
+            # Calculate and set the total_amount
+            total_amount = sum(
+                formset.cleaned_data['quantity'] * formset.cleaned_data['price']
+                for formset in formset.forms
+            )
+            sales_order_info.total_amount = total_amount
+
+            sales_order_info.save()
+
+            for formset_form in formset.forms:
+                if formset_form.has_changed():
+                    sales_order_delivery = formset_form.save(commit=False)
+                    sales_order_delivery.order_info = sales_order_info
+                    sales_order_delivery.price_total = (
+                        sales_order_delivery.quantity * sales_order_delivery.price
+                    )
+                    sales_order_delivery.save()
+
+            messages.success(request, 'The sales order has been updated successfully.')
+            return redirect('salesorder_update', pk=pk)
+        else:
+            for field, error_list in form.errors.items():
+                for error in error_list:
+                    messages.error(request, f'{field}: {error}')
+
+            for formset_error in formset.non_form_errors():
+                messages.error(request, formset_error)
+
+    else:
+        form = SalesOrderInfoForm(instance=sales_order_info)
+        formset = SalesOrderDeliveryFormSet(instance=sales_order_info)
+
+    context = {
+        'form': form,
+        'formset': formset,
+        'page_title': 'Update Sales Order'
+    }
+    return render(request, 'item/itemreceipt/updateform.html', context)
+
+
+def salesorder_info_list(request):
+    salesorderinfos = SalesOrderInfo.objects.all()
+    context = {'salesorderinfos': salesorderinfos, 'page_title': 'Sales Order List'}
+    return render(request, 'item/salesorder/list.html', context)
+
+def salesorder_info_delete(request, pk):
+    salesorderinfo = get_object_or_404(SalesOrderInfo, pk=pk)
+
+    if request.method == 'POST':
+        salesorderinfo.delete()
+        return redirect('salesorder_info_list')
+
+    return render(request, 'item/salesorder/delete.html', {'salesorderinfo': salesorderinfo})

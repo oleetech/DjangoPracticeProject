@@ -23,7 +23,28 @@ class Warehouse(models.Model):
 
     def __str__(self):
         return self.name
+class BusinessPartner(models.Model):
+    code = models.CharField(max_length=50,unique=True)
+    name = models.CharField(max_length=100,unique=True)
+    address = models.TextField()
+    currency = models.ForeignKey(Currency, on_delete=models.PROTECT,default=1)
 
+    CURRENCY_TYPES = [
+        ('local', 'Local Currency'),
+        ('foreign', 'Foreign Currency'),
+    ]
+    currency_type = models.CharField(max_length=10, choices=CURRENCY_TYPES,default='local')
+
+    VENDOR_TYPES = [
+        ('supplier', 'Supplier'),
+        ('customer', 'Customer'),
+    ]
+    vendor_type = models.CharField(max_length=10, choices=VENDOR_TYPES,default='customer')
+
+    def __str__(self):
+        return self.name  
+    
+    
 class Item(models.Model):
     name = models.CharField(max_length=100,unique=True)
     description = models.TextField()
@@ -36,7 +57,12 @@ class Item(models.Model):
 
     def __str__(self):
         return self.name
+class Stock(models.Model):
+    warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=0)
 
+ 
 class ItemReceiptinfo(models.Model):
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
     docno = models.PositiveIntegerField(default=1,unique=True)
@@ -70,29 +96,34 @@ class ItemDelivery(models.Model):
     quantity = models.PositiveIntegerField(default=0)
     def __str__(self):
         return f"ItemDelivery: {self.item.name} - {self.quantity}"
-    
-class Stock(models.Model):
-    warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=0)
 
-class BusinessPartner(models.Model):
-    code = models.CharField(max_length=50,unique=True)
-    name = models.CharField(max_length=100,unique=True)
-    address = models.TextField()
-    currency = models.ForeignKey(Currency, on_delete=models.PROTECT,default=1)
+class SalesOrderInfo(models.Model):
+    order_number = models.PositiveIntegerField(default=1, unique=True)
+    customername = models.ForeignKey(BusinessPartner,on_delete=models.CASCADE,null=True, default=None)
+    created = models.DateTimeField(default=timezone.now)
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2, editable=False)
 
-    CURRENCY_TYPES = [
-        ('local', 'Local Currency'),
-        ('foreign', 'Foreign Currency'),
-    ]
-    currency_type = models.CharField(max_length=10, choices=CURRENCY_TYPES,default='local')
 
-    VENDOR_TYPES = [
-        ('supplier', 'Supplier'),
-        ('customer', 'Customer'),
-    ]
-    vendor_type = models.CharField(max_length=10, choices=VENDOR_TYPES,default='customer')
 
     def __str__(self):
-        return self.name   
+        return f"SalesOrderInfo: {self.order_number}"
+    
+    
+class SalesOrderDelivery(models.Model):
+    order_info = models.ForeignKey(SalesOrderInfo, on_delete=models.CASCADE, null=True, default=None)
+
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=0)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price_total = models.DecimalField(max_digits=10, decimal_places=2, editable=False)
+
+
+
+    def __str__(self):
+        return f"SalesOrderDelivery: {self.item.name} - {self.quantity}"
+
+
+
+
+
+    

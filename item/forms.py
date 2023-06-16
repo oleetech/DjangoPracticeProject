@@ -2,12 +2,14 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 from .models import Currency
-from .models import Item,ItemReceipt,ItemReceiptinfo,ItemDelivery,ItemDeliveryinfo
+from .models import Item,ItemReceipt,ItemReceiptinfo,ItemDelivery,ItemDeliveryinfo,SalesOrderInfo,SalesOrderDelivery
+from .models import Stock
 from .models import BusinessPartner
 from .models import Warehouse
 from .models import Unit
 from django_select2.forms import Select2Widget
 from django.forms.models import inlineformset_factory
+
 class SearchForm(forms.Form):
     name = forms.CharField(required=True)
     description = forms.CharField(required=True, widget=forms.TextInput)
@@ -88,6 +90,18 @@ class ItemForm(forms.ModelForm):
                 'class': 'form-control',
                 'id': f"defaultForm-{field_name}",
             })          
+class StockForm(forms.ModelForm):
+    class Meta:
+        model = Stock
+        fields = ['warehouse', 'item', 'quantity']
+
+    def __init__(self, *args, **kwargs):
+        super(StockForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs.update({
+                'class': 'form-control',
+                'id': f"defaultForm-{field_name}",
+            })
             
 class ItemReceiptinfoForm(forms.ModelForm):
 
@@ -154,7 +168,7 @@ class ItemDeliveryForm(forms.ModelForm):
                 'id': f"defaultForm-{field_name}",
             })
        
-        
+       
 class BusinessPartnerForm(forms.ModelForm):
     address = forms.CharField(widget=forms.TextInput)
 
@@ -172,3 +186,38 @@ class BusinessPartnerForm(forms.ModelForm):
                 'id': f"defaultForm-{field_name}",
             })             
 
+
+
+class SalesOrderInfoForm(forms.ModelForm):
+    customername = forms.ModelChoiceField(
+    queryset=BusinessPartner.objects.all(),
+    widget=Select2Widget(attrs={'class': 'select2'}))
+
+    class Meta:
+        model = SalesOrderInfo
+        fields = ['order_number', 'customername', 'created']
+
+    def __init__(self, *args, **kwargs):
+        super(SalesOrderInfoForm, self).__init__(*args, **kwargs)
+        last_order_number = SalesOrderInfo.objects.last().order_number if SalesOrderInfo.objects.exists() else 0
+        self.fields['order_number'].initial = last_order_number + 1
+        self.fields['order_number'].widget.attrs['disabled'] = True
+        self.fields['order_number'].required = False
+        for field_name, field in self.fields.items():
+            field.widget.attrs.update({
+                'class': 'form-control',
+                'id': f"defaultForm-{field_name}",
+            })
+            
+class SalesOrderDeliveryForm(forms.ModelForm):
+    class Meta:
+        model = SalesOrderDelivery
+        fields = ('item', 'quantity', 'price')
+
+    def __init__(self, *args, **kwargs):
+        super(SalesOrderDeliveryForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs.update({
+                'class': 'form-control input-xs',
+                'id': f"defaultForm-{field_name}",
+            })            

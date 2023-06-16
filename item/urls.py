@@ -21,6 +21,11 @@ urlpatterns = [
     path('itemdelivery/list/', views.itemdeliveryinfo_list, name='itemdeliveryinfo_list'),
     path('itemdelivery/delete/<int:pk>/', views.itemdeliveryinfo_delete, name='itemdeliveryinfo_delete'),
     
+    path('salesorder/create/', views.salesorder_create, name='salesorder_create'),
+    path('salesorder/update/<int:pk>/', views.salesorder_update, name='salesorder_update'),
+    path('salesorder/list/', views.salesorder_info_list, name='salesorder_info_list'),
+    path('salesorder/delete/<int:pk>/', views.salesorder_info_delete, name='salesorder_info_delete'),
+    
     path('warehouses/create/', views.warehouse_create, name='warehouse_create'),
     path('currency/create/', views.currency_create, name='currency_create'),
     path('unit/create/', views.unit_create, name='unit_create'),
@@ -28,6 +33,7 @@ urlpatterns = [
 
     path('business_partner/create/', views.business_partner_create, name='business_partner_create'),
 
+    path('stock/create/', views.stock_create, name='stock_create'),
 
 
 ]

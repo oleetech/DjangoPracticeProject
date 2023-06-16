@@ -3,6 +3,7 @@
 {% load static %}
 {% block content %}
     <h1>Update </h1>
+    {% include 'alert.html' %}
     <form method="post">
         {% csrf_token %}
         {% include 'component/formfield.html' %}
