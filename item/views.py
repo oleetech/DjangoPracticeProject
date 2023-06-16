@@ -204,7 +204,7 @@ def itemreceipt_create(request):
         ItemReceipt,
         form=ItemReceiptForm,
         fields=('item', 'quantity'),
-        extra=1,
+        extra=0,
         can_delete=False,
         min_num=1,
         validate_min=True
@@ -261,8 +261,16 @@ def itemreceipt_update(request, pk):
     # Retrieve the success message from the query parameters
     success_message = request.GET.get('success_message')
     itemreceiptinfo = get_object_or_404(ItemReceiptinfo, pk=pk)
-    ItemReceiptFormSet = inlineformset_factory(ItemReceiptinfo, ItemReceipt, form=ItemReceiptForm, fields=('item', 'quantity',),
-                                               extra=1, can_delete=False, min_num=1, validate_min=True)
+    ItemReceiptFormSet = inlineformset_factory(
+        ItemReceiptinfo,
+        ItemReceipt,
+        form=ItemReceiptForm,
+        fields=('item', 'quantity'),
+        extra=1,
+        can_delete=False,
+        min_num=1,
+        validate_min=True
+    )
 
     if request.method == 'POST':
         form = ItemReceiptinfoForm(request.POST, instance=itemreceiptinfo)
@@ -270,24 +278,32 @@ def itemreceipt_update(request, pk):
 
         if form.is_valid() and formset.is_valid():
             form.save()
-            instances = formset.save(commit=False)  # Save the formset instances without committing to the database
-
-            for instance in instances:
-                instance.warehouse = itemreceiptinfo.warehouse  # Assign the warehouse value
-                instance.save()
-
-            formset.save()  # Save the many-to-many relationships, if any
-            messages.success(request, 'The item has been updated successfully.')
-            # Redirect to itemreceipt_update route
+            
+            for formset_form in formset.forms:
+                if formset_form.has_changed():
+                    item_receipt = formset_form.save(commit=False)
+                    item_receipt.item_info = itemreceiptinfo
+                    item_receipt.warehouse = itemreceiptinfo.warehouse
+                    item_receipt.save()
+            
+            messages.success(request, 'The post has been updated successfully.')
             return redirect('itemreceipt_create')
+        else:
+            # Add form errors to messages framework
+            for field, error_list in form.errors.items():
+                for error in error_list:
+                    messages.error(request, f'{field}: {error}')
+                    
+            for formset_error in formset.non_form_errors():
+                messages.error(request, formset_error)
+                
     else:
         form = ItemReceiptinfoForm(instance=itemreceiptinfo)
         formset = ItemReceiptFormSet(instance=itemreceiptinfo)
 
     context = {
         'form': form,
-        'formset': formset,
-        'itemreceiptinfo': itemreceiptinfo,
+        'formset': formset
     }
     return render(request, 'item/itemreceipt/updateform.html', context)
 

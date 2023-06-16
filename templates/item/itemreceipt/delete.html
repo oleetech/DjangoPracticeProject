@@ -5,10 +5,32 @@
 
 <p>Are you sure you want to delete item receipt info with ID: {{ itemreceiptinfo.pk }}?</p>
 
-<form method="post" action="{% url 'itemreceiptinfo_delete' itemreceiptinfo.pk %}">
-    {% csrf_token %}
-    <button type="submit">Delete</button>
-    <a href="{% url 'itemreceiptinfo_list' %}">Cancel</a>
-</form>
+<!-- Button to trigger the modal -->
+<button type="button" class="btn young-passion-gradient" data-toggle="modal" data-target="#confirmDeleteModal">Delete</button>
+<a href="{% url 'itemreceiptinfo_list' %}" class="btn btn-secondary">Cancel</a>
+
+<!-- Modal -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete item receipt info with ID: {{ itemreceiptinfo.pk }}?</p>
+            </div>
+            <div class="modal-footer">
+                <form method="post" action="{% url 'itemreceiptinfo_delete' itemreceiptinfo.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn young-passion-gradient ">Delete</button>
+                </form>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

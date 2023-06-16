@@ -55,13 +55,22 @@ class ItemReceipt(models.Model):
     def clean(self):
         if self.quantity == 0:
             raise ValidationError("Quantity cannot be 0.")
+ 
+class ItemDeliveryinfo(models.Model):
+    warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
+    docno = models.PositiveIntegerField(default=1,unique=True)
+    created = models.DateTimeField(default=timezone.now)
+    def __str__(self):
+        return f" {self.docno}" 
   
 class ItemDelivery(models.Model):
+    item_info = models.ForeignKey(ItemDeliveryinfo, on_delete=models.CASCADE, null=True, default=None)    
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=0)
     def __str__(self):
         return f"ItemDelivery: {self.item.name} - {self.quantity}"
+    
 class Stock(models.Model):
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)

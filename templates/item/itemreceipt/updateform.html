@@ -1,83 +1,39 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Update Author</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('.add-form').click(function() {
-                cloneForm($(this).data('form-prefix'));
-            });
 
-            $('.delete-form').click(function() {
-                deleteForm($(this).closest('.form-container'));
-            });
-
-            function cloneForm(formPrefix) {
-                const formContainer = $('.form-container').last();
-                const totalForms = parseInt($('#id_' + formPrefix + '-TOTAL_FORMS').val());
-                const newForm = formContainer.clone();
-                
-                newForm.find('input').val('');
-                newForm.find('select').val('');
-                newForm.find('input[type="checkbox"]').prop('checked', false);
-                newForm.find('input[type="hidden"]').remove();
-                newForm.find('label.error').remove();
-
-                formContainer.after(newForm);
-
-                newForm.find('input, select').each(function() {
-                    updateFormElementIndex($(this), formPrefix, totalForms);
-                });
-
-                $('#id_' + formPrefix + '-TOTAL_FORMS').val(totalForms + 1);
-            }
-
-            function deleteForm(formContainer) {
-                const totalForms = parseInt($('#id_' + formContainer.data('form-prefix') + '-TOTAL_FORMS').val());
-
-                if (totalForms > 1) {
-                    formContainer.remove();
-                    updateFormIndices(formContainer.data('form-prefix'));
-                    $('#id_' + formContainer.data('form-prefix') + '-TOTAL_FORMS').val(totalForms - 1);
-                }
-            }
-
-            function updateFormElementIndex(elem, formPrefix, formIndex) {
-                const idRegex = new RegExp(formPrefix + '-(\\d+|__prefix__)-');
-                const replacement = formPrefix + '-' + formIndex + '-';
-                elem.attr('id', elem.attr('id').replace(idRegex, replacement));
-                elem.attr('name', elem.attr('name').replace(idRegex, replacement));
-                elem.attr('for', elem.attr('for').replace(idRegex, replacement));
-            }
-
-            function updateFormIndices(formPrefix) {
-                $('.form-container').each(function(index) {
-                    updateFormElementIndex($(this), formPrefix, index);
-                });
-            }
-        });
-    </script>
-</head>
-<body>
-    <h1>Update Author</h1>
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <h1>Update </h1>
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        {% include 'component/formfield.html' %}
+        <button type="button" class="add-form btn btn-sm blue-gradient btn-rounded waves-effect waves-light" data-form-prefix="{{ formset.prefix }}">Add Row</button>
+                     
         {{ formset.management_form }}
-        <div class="formset-container">
+        <table>
+          <thead>
+            <tr>
+              {% for field in formset.forms.0 %}
+                <th>{{ field.label }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
             {% for form in formset %}
-                <div class="form-container">
-                    {{ form.as_table }}
-                    {% if forloop.last %}
-                        <button type="button" class="add-form" data-form-prefix="{{ formset.prefix }}">Add Book</button>
-                    {% else %}
-                        <button type="button" class="delete-form">Remove Book</button>
-                    {% endif %}
-                </div>
+              <tr class='form-container'>
+                {% for field in form %}
+                  <td>{{ field }}</td>
+                {% endfor %}
+              </tr>
             {% endfor %}
+          </tbody>
+        </table>
+        
+        
         </div>
-        <button type="submit">Save</button>
+        <div class="text-center">
+            <button type="submit" class="btn blue-gradient btn-rounded waves-effect waves-light">Save</button>
+        </div>
     </form>
-</body>
-</html>
+    
+
+    {% endblock %}
