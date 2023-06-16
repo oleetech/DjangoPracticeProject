@@ -1,0 +1,68 @@
+    <!-- Sidebar navigation -->
+    <div id="slide-out" class="side-nav sn-bg-4 fixed">
+        <ul class="custom-scrollbar">
+          <!-- Logo -->
+          <li class="logo-sn waves-effect py-3">
+            <div class="text-center">
+              <a href="#" class="pl-0"><img src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png"></a>
+            </div>
+          </li>
+          <!-- Logo -->
+  
+          <!--Search Form-->
+          <li>
+            <form class="search-form" role="search">
+              <div class="md-form mt-0 waves-light">
+                <input type="text" class="form-control py-2" placeholder="Search">
+              </div>
+            </form>
+          </li>
+          <!--Search Form-->
+          <!-- Side navigation links -->
+          <li>
+            <ul class="collapsible collapsible-accordion">
+              <li><a class="collapsible-header waves-effect arrow-r"><i class="fas fa-tachometer-alt"></i>
+                  General Setting  <i class="fas fa-angle-down rotate-icon"></i></a>
+                <div class="collapsible-body">
+                  <ul>
+                    <li><a href="{% url 'currency_create' %}"  class="waves-effect">Currency</a></li>
+                    <li><a href="{% url 'unit_create' %}"  class="waves-effect">Unit</a></li>
+                    <li><a href="{% url 'warehouse_create' %}" class="waves-effect">Warehouse</a></li>
+                  </ul>
+                </div>
+              </li>
+              <!-- Inventory -->
+              <li><a class="collapsible-header waves-effect arrow-r"><i class="fas fa-tachometer-alt"></i>
+                Inventory <i class="fas fa-angle-down rotate-icon"></i></a>
+              <div class="collapsible-body">
+                <ul>
+                  <li><a href="{% url 'item_create' %}"  class="waves-effect">Item Master Data </a></li>
+                  <li><a href="{% url 'itemreceipt_create' %}"  class="waves-effect">Goods Receipt </a></li>
+                  <li><a href="{% url 'itemdelivery_create' %}"  class="waves-effect">Goods Delivery </a></li>
+                </ul>
+              </div>
+            </li>
+              <!-- Sales -->
+              <li><a class="collapsible-header waves-effect arrow-r"><i class="fas fa-tachometer-alt"></i>
+                Sales <i class="fas fa-angle-down rotate-icon"></i></a>
+              <div class="collapsible-body">
+                <ul>
+                  <li><a href="{% url 'unit_create' %}"  class="waves-effect">Sales Order </a></li>
+                </ul>
+              </div>
+            </li>
+              <!-- Business Partner Master Data  -->
+              <li><a class="collapsible-header waves-effect arrow-r"><i class="fas fa-tachometer-alt"></i>
+                Business Partner <i class="fas fa-angle-down rotate-icon"></i></a>
+              <div class="collapsible-body">
+                <ul>
+                  <li><a href="{% url 'business_partner_create' %}"  class="waves-effect">Business Partner </a></li>
+                </ul>
+              </div>
+            </li>
+  
+          <!-- Side navigation links -->
+        </ul>
+        <div class="sidenav-bg mask-strong"></div>
+      </div>
+      <!-- Sidebar navigation -->

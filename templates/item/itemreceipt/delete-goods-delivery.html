@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Delete Item Delivery Info</h2>
+
+  <p>Are you sure you want to delete item delivery info with ID: {{ itemdeliveryinfo.pk }}?</p>
+
+  <form method="post" action="{% url 'itemdeliveryinfo_delete' itemdeliveryinfo.pk %}">
+    {% csrf_token %}
+    <button type="submit">Delete</button>
+    <a href="{% url 'itemdeliveryinfo_list' %}">Cancel</a>
+  </form>
+{% endblock %}

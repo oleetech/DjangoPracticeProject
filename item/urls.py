@@ -15,6 +15,12 @@ urlpatterns = [
     path('itemreceipt/list/', views.itemreceiptinfo_list, name='itemreceiptinfo_list'),
     path('itemreceipt/delete/<int:pk>/', views.itemreceiptinfo_delete, name='itemreceiptinfo_delete'),
     
+    
+    path('itemdelivery/create', views.itemdelivery_create, name='itemdelivery_create'),
+    path('itemdelivery/update/<int:pk>/', views.itemdelivey_update, name='itemdelivey_update'),
+    path('itemdelivery/list/', views.itemdeliveryinfo_list, name='itemdeliveryinfo_list'),
+    path('itemdelivery/delete/<int:pk>/', views.itemdeliveryinfo_delete, name='itemdeliveryinfo_delete'),
+    
     path('warehouses/create/', views.warehouse_create, name='warehouse_create'),
     path('currency/create/', views.currency_create, name='currency_create'),
     path('unit/create/', views.unit_create, name='unit_create'),

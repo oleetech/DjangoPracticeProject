@@ -2,7 +2,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 from .models import Currency
-from .models import Item,ItemReceipt,ItemReceiptinfo
+from .models import Item,ItemReceipt,ItemReceiptinfo,ItemDelivery,ItemDeliveryinfo
 from .models import BusinessPartner
 from .models import Warehouse
 from .models import Unit
@@ -124,11 +124,36 @@ class ItemReceiptForm(forms.ModelForm):
                 'id': f"defaultForm-{field_name}",
             })  
 
-
-
-
-
+class ItemDeliveryinfoForm(forms.ModelForm):
+    class Meta:
+        model = ItemDeliveryinfo
+        fields = ['warehouse', 'docno', 'created']
         
+    def __init__(self, *args, **kwargs):
+        super(ItemDeliveryinfoForm, self).__init__(*args, **kwargs)
+        last_docno = ItemDeliveryinfo.objects.last().docno if ItemDeliveryinfo.objects.exists() else 0
+        self.fields['docno'].initial = last_docno + 1
+        self.fields['docno'].widget.attrs['disabled'] = True
+        self.fields['docno'].required = False
+        for field_name, field in self.fields.items():
+            field.widget.attrs.update({
+                'class': 'form-control',
+                'id': f"defaultForm-{field_name}",
+            })
+
+class ItemDeliveryForm(forms.ModelForm):
+    class Meta:
+        model = ItemDelivery
+        fields = ('item', 'quantity')
+
+    def __init__(self, *args, **kwargs):
+        super(ItemDeliveryForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs.update({
+                'class': 'form-control input-xs',
+                'id': f"defaultForm-{field_name}",
+            })
+       
         
 class BusinessPartnerForm(forms.ModelForm):
     address = forms.CharField(widget=forms.TextInput)

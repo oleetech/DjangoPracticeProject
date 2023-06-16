@@ -4,8 +4,8 @@ from django.urls import reverse
 
 
 from django.forms import formset_factory, inlineformset_factory
-from .models import ItemReceipt, ItemReceiptinfo
-from .forms import ItemReceiptinfoForm,ItemReceiptForm
+from .models import ItemReceipt, ItemReceiptinfo,ItemDeliveryinfo,ItemDelivery
+from .forms import ItemReceiptinfoForm,ItemReceiptForm,ItemDeliveryinfoForm,ItemDeliveryForm
 
 
 from django.contrib import messages
@@ -252,7 +252,8 @@ def itemreceipt_create(request):
 
     context = {
         'form': form,
-        'formset': formset
+        'formset': formset,
+        'page_title': 'Create Item Receipt '  # Set the page title here
     }
     return render(request, 'item/itemreceipt/form.html', context)
 
@@ -320,3 +321,127 @@ def itemreceiptinfo_delete(request, pk):
         return redirect('itemreceiptinfo_list')
     
     return render(request, 'item/itemreceipt/delete.html', {'itemreceiptinfo': itemreceiptinfo})
+
+
+
+
+def itemdelivery_create(request):
+    ItemDeliveryFormSet = inlineformset_factory(
+        ItemDeliveryinfo,
+        ItemDelivery,
+        form=ItemDeliveryForm,
+        fields=('item', 'quantity'),
+        extra=0,
+        can_delete=False,
+        min_num=1,
+        validate_min=True
+    )
+
+    if request.method == 'POST':
+        form = ItemDeliveryinfoForm(request.POST)
+        formset = ItemDeliveryFormSet(request.POST)
+
+        if form.is_valid() and formset.is_valid():
+            last_item_deliveryinfo = ItemDeliveryinfo.objects.last()
+
+            if last_item_deliveryinfo:
+                new_docno = last_item_deliveryinfo.docno + 1
+            else:
+                new_docno = 1
+
+            itemdeliveryinfo = form.save(commit=False)
+            itemdeliveryinfo.docno = new_docno
+            itemdeliveryinfo.save()
+
+            for item_delivery_form in formset:
+                item_delivery = item_delivery_form.save(commit=False)
+                item_delivery.item_info = itemdeliveryinfo
+                item_delivery.warehouse = itemdeliveryinfo.warehouse
+                item_delivery.save()
+
+            messages.success(request, 'The post has been created successfully.')
+            return redirect('itemdelivery_create')
+        else:
+            for field, error_list in form.errors.items():
+                for error in error_list:
+                    messages.error(request, f'{field}: {error}')
+
+            for formset_error in formset.non_form_errors():
+                messages.error(request, formset_error)
+
+    else:
+        form = ItemDeliveryinfoForm()
+        formset = ItemDeliveryFormSet()
+
+    context = {
+        'form': form,
+        'formset': formset,
+        'page_title': 'Create Item Delivery'  # Set the page title here
+
+    }
+    return render(request, 'item/itemreceipt/form.html', context)
+
+
+def itemdelivey_update(request, pk):
+    # Retrieve the success message from the query parameters
+    success_message = request.GET.get('success_message')
+    itemdeliveryinfo = get_object_or_404(ItemDeliveryinfo, pk=pk)
+    ItemDeliveryFormSet = inlineformset_factory(
+        ItemDeliveryinfo,
+        ItemDelivery,
+        form=ItemDeliveryForm,
+        fields=('item', 'quantity'),
+        extra=1,
+        can_delete=False,
+        min_num=1,
+        validate_min=True
+    )
+
+    if request.method == 'POST':
+        form = ItemDeliveryinfoForm(request.POST, instance=itemdeliveryinfo)
+        formset = ItemDeliveryFormSet(request.POST, instance=itemdeliveryinfo)
+
+        if form.is_valid() and formset.is_valid():
+            form.save()
+
+            for formset_form in formset.forms:
+                if formset_form.has_changed():
+                    item_delivery = formset_form.save(commit=False)
+                    item_delivery.item_info = itemdeliveryinfo
+                    item_delivery.warehouse = itemdeliveryinfo.warehouse
+                    item_delivery.save()
+
+            messages.success(request, 'The post has been updated successfully.')
+            return redirect('itemdelivery_create')
+        else:
+            # Add form errors to messages framework
+            for field, error_list in form.errors.items():
+                for error in error_list:
+                    messages.error(request, f'{field}: {error}')
+
+            for formset_error in formset.non_form_errors():
+                messages.error(request, formset_error)
+
+    else:
+        form = ItemDeliveryinfoForm(instance=itemdeliveryinfo)
+        formset = ItemDeliveryFormSet(instance=itemdeliveryinfo)
+
+    context = {
+        'form': form,
+        'formset': formset
+    }
+    return render(request, 'item/itemreceipt/updateform.html', context)
+
+def itemdeliveryinfo_list(request):
+    itemdeliveryinfos = ItemDeliveryinfo.objects.all()
+    context = {'itemreceiptinfos': itemdeliveryinfos, 'page_title': ' Item Delivery list' }
+    return render(request, 'item/itemreceipt/itemdeliverylist.html',context )
+
+def itemdeliveryinfo_delete(request, pk):
+    itemdeliveryinfo = get_object_or_404(ItemDeliveryinfo, pk=pk)
+    
+    if request.method == 'POST':
+        itemdeliveryinfo.delete()
+        return redirect('itemdeliveryinfo_list')
+    
+    return render(request, 'item/itemreceipt/delete-goods-delivery.html', {'itemdeliveryinfo': itemdeliveryinfo})
